@@ -1,0 +1,23 @@
+{
+  "name": "linknest",
+  "version": "1.0.0",
+  "description": "Save, organize, and access your favorite links, videos, social posts, and documents — all in one place. Simple, smart, and always accessible.",
+  "license": "ISC",
+  "author": "Nachatra Sharma",
+  "type": "module",
+  "main": "./src/index.ts",
+  "scripts": {
+    "start": "node ./src/index.ts",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.2",
+    "typescript": "^5.8.3"
+  },
+  "dependencies": {
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.15.0"
+  }
+}
