@@ -1,12 +1,21 @@
 import express from 'express'
-import ApiRoute from './routes'
-import { PORT, DB_URL } from './config'
-import connectToDB from './db'
+import ApiRoute from './routes/index.js'
+import { PORT, DB_URL } from './config/index.js'
+import connectToDB from './db/index.js'
 const app = express()
 
+app.use(express.json())
 app.use('/api', ApiRoute)
 
-app.listen(PORT, async () => {
-  console.log(`Server is up and running on PORT ${PORT}`)
-  await connectToDB(DB_URL)
-})
+const startServer = async () => {
+  try {
+    await connectToDB(DB_URL)
+    app.listen(PORT, () => {
+      console.log(`Server is up and running on PORT ${PORT}`)
+    })
+  } catch (error) {
+    console.log('Something went wrong while running the server.')
+  }
+}
+
+startServer()
