@@ -2,7 +2,7 @@ import { Request, Response } from 'express'
 import jwt from 'jsonwebtoken'
 import User from '../model/user.js'
 import { JWT_SECRET, SALT_ROUND } from '../config/index.js'
-import { SignupPayload } from '../validations/Auth.js'
+import { SigninPayload, SignupPayload } from '../validations/Auth.js'
 import bcrypt from 'bcrypt'
 
 export const handleSignup = async (
@@ -76,6 +76,68 @@ export const handleSignup = async (
       success: false,
       data: {},
       message: 'Something went wrong in signup',
+      error: {
+        error,
+      },
+    })
+  }
+}
+
+export const handleSignin = async (
+  req: Request,
+  res: Response
+): Promise<any> => {
+  try {
+    const { username, password } = req.body
+    const result = SigninPayload.safeParse({ username, password })
+    if (!result.success) {
+      return res.status(409).json({
+        success: false,
+        data: {},
+        message: 'Validation Failed',
+        error: {
+          message: result.error.message,
+        },
+      })
+    }
+    const isUserExist = await User.findOne({
+      username,
+    })
+    if (!isUserExist) {
+      return res.status(402).json({
+        success: false,
+        data: {},
+        message: "User doesn't exist",
+        error: 'Invalid Credentails',
+      })
+    }
+    const isPasswordValid = bcrypt.compareSync(password, isUserExist.password)
+    if (!isPasswordValid) {
+      return res.status(402).json({
+        success: false,
+        data: {},
+        message: 'Invalid Credentails',
+        error: {
+          message: 'Invalid Credentails',
+        },
+      })
+    }
+    const access_token = jwt.sign({ id: isUserExist._id }, JWT_SECRET)
+    return res.status(200).json({
+      success: true,
+      data: {
+        username: isUserExist.username,
+        access_token,
+        email: isUserExist.email,
+      },
+      message: 'Sucessfully Logged In',
+      error: {},
+    })
+  } catch (error) {
+    return res.status(402).json({
+      success: false,
+      data: {},
+      message: 'Something went wrong in signin',
       error: {
         error,
       },
