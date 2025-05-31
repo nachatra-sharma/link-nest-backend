@@ -70,7 +70,56 @@ export const handleGetTags = async (
   } catch (error) {
     return res.status(400).json({
       success: false,
-      message: 'Something went wrong while creating tags',
+      message: 'Something went wrong while fetching tags',
+      data: {},
+      error: {
+        error,
+      },
+    })
+  }
+}
+
+export const handleDeleteTags = async (
+  req: Request,
+  res: Response
+): Promise<any> => {
+  try {
+    const params = req.params
+    if (!params.id) {
+      return res.status(400).json({
+        success: false,
+        message: 'Id is not valid',
+        data: {},
+        error: {
+          message: 'Id is not valid',
+        },
+      })
+    }
+    const deletedTag = await Tag.findOneAndDelete({
+      _id: params.id,
+    })
+    if (!deletedTag._id) {
+      return res.status(400).json({
+        success: false,
+        message: 'Id is not valid',
+        data: {},
+        error: {
+          message: 'Id is not valid',
+        },
+      })
+    }
+    return res.status(200).json({
+      success: true,
+      message: 'Tag has been successfully deleted',
+      data: {
+        tag: deletedTag,
+      },
+      error: {},
+    })
+  } catch (error) {
+    return res.status(400).json({
+      success: false,
+      message: 'Something went wrong while deleting tags',
       data: {},
       error: {
         error,

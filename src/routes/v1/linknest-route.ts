@@ -2,7 +2,11 @@ import express from 'express'
 const router = express.Router()
 import { handleSignup, handleSignin } from '../../controllers/Auth.js'
 import { handleCreateContent } from '../../controllers/Content.js'
-import { handleCreateTags, handleGetTags } from '../../controllers/Tags.js'
+import {
+  handleCreateTags,
+  handleGetTags,
+  handleDeleteTags,
+} from '../../controllers/Tags.js'
 import { handleLoggedInUser } from '../../middleware/handleLoggedInUser.js'
 import { handlePermission } from '../../middleware/handlePermission.js'
 
@@ -14,11 +18,19 @@ router.post('/signin', handleSignin)
 router.post('/content', handleCreateContent)
 
 // tags routes
+router.get('/tags', handleGetTags)
+
 router.post(
   '/tags',
   handleLoggedInUser,
   handlePermission('admin'),
   handleCreateTags
 )
-router.get('/tags', handleGetTags)
+
+router.delete(
+  '/tags/:id',
+  handleLoggedInUser,
+  handlePermission('admin'),
+  handleDeleteTags
+)
 export default router
