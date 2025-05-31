@@ -55,10 +55,15 @@ export const handleSignup = async (
     const createdUser = await User.create({
       username,
       password: hashPassword,
+      role: 'user',
       email,
     })
 
-    const access_token = jwt.sign({ id: createdUser._id }, JWT_SECRET)
+    const access_token = jwt.sign(
+      { id: createdUser._id, role: createdUser.role },
+      JWT_SECRET,
+      { expiresIn: '1d' }
+    )
 
     return res.status(201).json({
       success: true,
@@ -122,7 +127,11 @@ export const handleSignin = async (
         },
       })
     }
-    const access_token = jwt.sign({ id: isUserExist._id }, JWT_SECRET)
+    const access_token = jwt.sign(
+      { id: isUserExist._id, role: isUserExist.role },
+      JWT_SECRET,
+      { expiresIn: '1d' }
+    )
     return res.status(200).json({
       success: true,
       data: {

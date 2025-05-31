@@ -3,14 +3,14 @@ import mongoose from 'mongoose'
 const TagSchema = new mongoose.Schema(
   {
     tag: {
-      type: [String],
+      type: String,
       required: true,
       validate: {
-        validator: (value: string[]) => {
+        validator: (value: string) => {
           const allowedTag = ['youtube', 'social_media', 'website', 'link']
-          return value.every((v) => allowedTag.includes(v))
+          return allowedTag.includes(value)
         },
-        message: 'Invalid tag value(s)',
+        message: 'Invalid tag value',
       },
     },
   },
@@ -19,6 +19,6 @@ const TagSchema = new mongoose.Schema(
   }
 )
 
-const Tag = mongoose.model('Tag', TagSchema)
+const Tag = mongoose.models.Tag || mongoose.model('Tag', TagSchema)
 
 export default Tag
