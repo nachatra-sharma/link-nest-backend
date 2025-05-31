@@ -5,6 +5,7 @@ const TagSchema = new mongoose.Schema(
     tag: {
       type: String,
       required: true,
+      unique: true,
       validate: {
         validator: (value: string) => {
           const allowedTag = ['youtube', 'social_media', 'website', 'link']

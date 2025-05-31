@@ -2,7 +2,7 @@ import express from 'express'
 const router = express.Router()
 import { handleSignup, handleSignin } from '../../controllers/Auth.js'
 import { handleCreateContent } from '../../controllers/Content.js'
-import { handleCreateTags } from '../../controllers/Tags.js'
+import { handleCreateTags, handleGetTags } from '../../controllers/Tags.js'
 import { handleLoggedInUser } from '../../middleware/handleLoggedInUser.js'
 import { handlePermission } from '../../middleware/handlePermission.js'
 
@@ -20,5 +20,5 @@ router.post(
   handlePermission('admin'),
   handleCreateTags
 )
-
+router.get('/tags', handleGetTags)
 export default router

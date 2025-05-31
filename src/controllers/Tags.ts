@@ -17,6 +17,19 @@ export const handleCreateTags = async (
         },
       })
     }
+    const tags = await Tag.findOne({
+      tag,
+    })
+    if (tags._id) {
+      return res.status(400).json({
+        success: false,
+        message: 'Tag is already present with this name',
+        data: {},
+        error: {
+          nmessage: 'Already in database',
+        },
+      })
+    }
     const currentTag = await Tag.create({
       tag,
     })
@@ -29,7 +42,33 @@ export const handleCreateTags = async (
       error: {},
     })
   } catch (error) {
-    return res.status(402).json({
+    return res.status(400).json({
+      success: false,
+      message: 'Something went wrong while creating tags',
+      data: {},
+      error: {
+        error,
+      },
+    })
+  }
+}
+
+export const handleGetTags = async (
+  req: Request,
+  res: Response
+): Promise<any> => {
+  try {
+    const tags = await Tag.find({})
+    return res.status(200).json({
+      succcess: true,
+      message: 'Successfully fetched all the tags',
+      data: {
+        tags: tags,
+      },
+      error: {},
+    })
+  } catch (error) {
+    return res.status(400).json({
       success: false,
       message: 'Something went wrong while creating tags',
       data: {},
