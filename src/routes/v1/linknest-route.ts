@@ -1,7 +1,10 @@
 import express from 'express'
 const router = express.Router()
 import { handleSignup, handleSignin } from '../../controllers/Auth.js'
-import { handleCreateContent } from '../../controllers/Content.js'
+import {
+  handleCreateContent,
+  handleGetContent,
+} from '../../controllers/Content.js'
 import {
   handleCreateTags,
   handleGetTags,
@@ -15,7 +18,8 @@ router.post('/signup', handleSignup)
 router.post('/signin', handleSignin)
 
 // content routes
-router.post('/content', handleCreateContent)
+router.get('/content', handleGetContent)
+router.post('/content', handleLoggedInUser, handleCreateContent)
 
 // tags routes
 router.get('/tags', handleGetTags)
